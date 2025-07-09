@@ -1,20 +1,47 @@
 
 
 
-#include "Character/AuraCharacter.h"
+	#include "Character/AuraCharacter.h"
 
-#include "GameFramework/CharacterMovementComponent.h"
+	#include "AbilitySystemComponent.h"
+	#include "GameFramework/CharacterMovementComponent.h"
+	#include "Player/AuraPlayerState.h"
 
-AAuraCharacter::AAuraCharacter()
-{
+	AAuraCharacter::AAuraCharacter()
+	{
 
-	GetCharacterMovement()->bOrientRotationToMovement = true;
-	GetCharacterMovement()->RotationRate = FRotator(0.0f, 400.0f, 0.0f);
-	//
-	GetCharacterMovement()->bConstrainToPlane = true;
-	GetCharacterMovement()->bSnapToPlaneAtStart = true;
+		GetCharacterMovement()->bOrientRotationToMovement = true;
+		GetCharacterMovement()->RotationRate = FRotator(0.0f, 400.0f, 0.0f);
+		//
+		GetCharacterMovement()->bConstrainToPlane = true;
+		GetCharacterMovement()->bSnapToPlaneAtStart = true;
 
-	bUseControllerRotationPitch = false;
-	bUseControllerRotationYaw = false;
-	bUseControllerRotationRoll = false;
-}
+		bUseControllerRotationPitch = false;
+		bUseControllerRotationYaw = false;
+		bUseControllerRotationRoll = false;
+	}
+
+	void AAuraCharacter::PossessedBy(AController* NewController)
+	{
+		Super::PossessedBy(NewController);
+
+		//Init ability actor info for the server
+		InitAbilitySystemComponent();
+	}
+
+	void AAuraCharacter::OnRep_PlayerState()
+	{
+		Super::OnRep_PlayerState();
+		//Init ability actor info for the client
+		InitAbilitySystemComponent();
+	}
+
+	void AAuraCharacter::InitAbilitySystemComponent()
+	{
+		
+		AAuraPlayerState* AuraPlayerState = GetPlayerState<AAuraPlayerState>();
+		check(AuraPlayerState);
+		AuraPlayerState->GetAbilitySystemComponent()->InitAbilityActorInfo(AuraPlayerState, this);
+		AbilitySystemComponent = AuraPlayerState->GetAbilitySystemComponent();
+		AttributeSet = AuraPlayerState->GetAttributeSet();
+	}
