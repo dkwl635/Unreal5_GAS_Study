@@ -2,11 +2,16 @@
 
 
 #include "Character/AuraEnemy.h"
+
+#include "AbilitySystemComponent.h"
 #include "Aura.h"
+
 
 AAuraEnemy::AAuraEnemy()
 {
 	GetMesh()->SetCollisionResponseToChannel(ECC_Visibility, ECR_Block);
+
+	AbilitySystemComponent->SetReplicationMode(EGameplayEffectReplicationMode::Minimal);
 }
 
 void AAuraEnemy::HighlightActor()
