@@ -13,5 +13,7 @@ UCLASS()
 class AURA_API UAuraAbilitySystemComponent : public UAbilitySystemComponent
 {
 	GENERATED_BODY()
+
+	public:
 	
 };
