@@ -19,7 +19,7 @@ AAuraEffectActor::AAuraEffectActor()
 	Sphere = CreateDefaultSubobject<USphereComponent>(TEXT("Sphere"));
 	Sphere->SetupAttachment(GetRootComponent());
 
-	
+	  
 	
 	
 }
