@@ -50,6 +50,7 @@ void AAuraPlayerController::CursorTrace()
 	
 		
 }
+
 void AAuraPlayerController::BeginPlay()
 {
 	Super::BeginPlay();
@@ -57,9 +58,11 @@ void AAuraPlayerController::BeginPlay()
 	check(AuraContext);
 
 	UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer());
-	check(Subsystem);
-
-	Subsystem->AddMappingContext(AuraContext , 0);
+	//check(Subsystem);
+	if (Subsystem)
+	{
+		Subsystem->AddMappingContext(AuraContext , 0);
+	}
 
 	SetShowMouseCursor(true);
 	DefaultMouseCursor = EMouseCursor::Default;
