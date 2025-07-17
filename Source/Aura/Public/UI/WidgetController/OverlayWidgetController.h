@@ -21,6 +21,7 @@ class AURA_API UOverlayWidgetController : public UAuraWidgetController
 
 public:
 	virtual  void BroadcastInitialValues() override;
+	virtual  void BindCallbacksToDependencies() override;
 
 	UPROPERTY(BlueprintAssignable, Category = "GAS|Attributes")
 	FOnHealthChageSignature OnHealthChanged;
@@ -28,4 +29,8 @@ public:
 	UPROPERTY(BlueprintAssignable, Category = "GAS|Attributes")
 	FOnMaxHealthChageSignature OnMaxHealthChanged;
 
+protected:
+	void HealthChanged(const FOnAttributeChangeData& Data);
+	void MaxHealthChanged(const FOnAttributeChangeData& Data);
+	
 };
