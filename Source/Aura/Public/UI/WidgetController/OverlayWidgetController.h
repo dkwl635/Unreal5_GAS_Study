@@ -7,13 +7,6 @@
 #include "UI/WidgetController/AuraWidgetController.h"
 #include "OverlayWidgetController.generated.h"
 
-//health
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnHealthChageSignature, float, NewHealth);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnMaxHealthChageSignature, float, NewMaxHealth);
-//Mana
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnManaChageSignature, float, NewMana);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnMaxManaChageSignature, float, NewMaxMana);
-
 USTRUCT()
 struct FUIWidgetRow : public FTableRowBase
 {
@@ -31,6 +24,17 @@ struct FUIWidgetRow : public FTableRowBase
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	UTexture2D* Image = nullptr;
 };
+
+//health
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnHealthChageSignature, float, NewHealth);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnMaxHealthChageSignature, float, NewMaxHealth);
+//Mana
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnManaChageSignature, float, NewMana);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnMaxManaChageSignature, float, NewMaxMana);
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FMessageWidgetRowSignature, FUIWidgetRow, Row);
+
+
 
 /**
  * 
@@ -54,6 +58,9 @@ public:
 	FOnManaChageSignature OnManaChanged;
 	UPROPERTY(BlueprintAssignable, Category = "GAS|Attributes")
 	FOnMaxManaChageSignature OnMaxManaChanged;
+
+	UPROPERTY(BlueprintAssignable, Category = "GAS|Message")
+	FMessageWidgetRowSignature MessageWidgetRowSignature;
 	
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Widget Data")
@@ -67,6 +74,7 @@ protected:
 	void ManaChange(const FOnAttributeChangeData& Data);
 	void MaxManaChange(const FOnAttributeChangeData& Data);
 	
-	
-	
+	template<typename T>
+	T* GetDataTableRowByTag(UDataTable* DataTable , const FGameplayTag& Tag);
 };
+

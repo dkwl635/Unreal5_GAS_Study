@@ -2,7 +2,6 @@
 
 
 #include "UI/WidgetController/OverlayWidgetController.h"
-
 #include "AbilitySystem/AuraAbilitySystemComponent.h"
 #include "AbilitySystem/AuraAttributeSet.h"
 
@@ -33,12 +32,20 @@ void UOverlayWidgetController::BindCallbacksToDependencies()
 
 	//Abitity
 	Cast<UAuraAbilitySystemComponent>(AbilitySystemComponent)->EffectAssetTags.AddLambda(
-	[](const FGameplayTagContainer& AssetTags)
+	[this](const FGameplayTagContainer& AssetTags)
 		{
 			for ( const FGameplayTag& Tag : AssetTags )
 			{
-				const FString Msg = FString(FString::Printf(TEXT("GE Tag : %s"), *Tag.ToString()));
-				GEngine->AddOnScreenDebugMessage(-1,8.0f, FColor::Blue, Msg);
+				FGameplayTag MessageTag = FGameplayTag::RequestGameplayTag(FName("Message"));
+				if (Tag.MatchesTag(MessageTag))
+				{
+					const FUIWidgetRow* Row = GetDataTableRowByTag<FUIWidgetRow>(MessageWidgetDataTable, Tag);
+					MessageWidgetRowSignature.Broadcast(*Row);
+				}
+				///const FString Msg = FString(FString::Printf(TEXT("GE Tag : %s"), *Tag.ToString()));
+				///GEngine->AddOnScreenDebugMessage(-1,8.0f, FColor::Blue, Msg);
+
+				
 			}
 		}
 	);
@@ -63,4 +70,10 @@ void UOverlayWidgetController::ManaChange(const FOnAttributeChangeData& Data)
 void UOverlayWidgetController::MaxManaChange(const FOnAttributeChangeData& Data)
 {
 	OnMaxManaChanged.Broadcast(Data.NewValue);
+}
+
+template <typename T>
+T* UOverlayWidgetController::GetDataTableRowByTag(UDataTable* DataTable, const FGameplayTag& Tag)
+{
+	return  DataTable->FindRow<T>(Tag.GetTagName(), TEXT(""));
 }
