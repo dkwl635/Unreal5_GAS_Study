@@ -56,6 +56,6 @@
 			}
 		}
 
-		InitializePrimaryAttributes();
+		InitializeDefaultAttributes();
 		
 	}
